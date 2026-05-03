@@ -13,13 +13,19 @@ class Body{
             velocity.push_back(vel);
             mass=m;
         };
+        void clear();
 };
 
 class NBodySolver{
     public:
     std::vector<Body> bodies;
     int plotIter=0;
+    int endTimeDays=365;
+    int tStepHours=1;
+    int endTime;
+    int tStep;
+    void NBodySolver::recalcTconstants();
     vec3 NBodySolver::calcDv(int bodyI);
     double NBodySolver::distance(int i,int j);
-    void NBodySolver::solveNBody(int end,int timeStep=1);
+    void NBodySolver::solveNBody();
 };

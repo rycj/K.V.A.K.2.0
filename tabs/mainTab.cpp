@@ -35,9 +35,30 @@ void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constant
 
             ImGui::EndChild();
         }
+
+            ImGui::SliderInt("end time (d)", &solver->endTimeDays, 1, 3650);
+            ImGui::SliderInt("time step (h)", &solver->tStepHours, 1, 24);
+            solver->recalcTconstants();
+
         if (ImGui::Button("START"))
-        {
-            solver->solveNBody(500000,100);
+        {   
+            for (int i=0;i<solver->bodies.size();i++)
+            {
+                solver->bodies[i].clear();
+            }
+            solver->solveNBody();
+            // double topSize = 0;
+            // for (int i=0;i<solver->bodies[1].velocity.size();i++)
+            // {
+                
+            //     if (solver->bodies[1].velocity[i].size()>topSize)
+            //     {
+                    
+            //         topSize=solver->bodies[1].velocity[i].size();
+            //     }
+            // }
+            // std::cout<<topSize<<"\n";
+            
         }
         if (ImGui::Button("plot"))
         {
@@ -63,7 +84,7 @@ void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constant
                                 ImPlot::PlotLine("NBodyPlot",xs.data(),ys.data(),solver->plotIter);
                                 std::cout<<"plot time"<<solver->plotIter<<std::endl;
                             }
-                            solver->plotIter+=1000;
+                            solver->plotIter+=10;
                         }
                     }
                 ImPlot::EndPlot();
