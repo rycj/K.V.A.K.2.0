@@ -31,6 +31,14 @@
         return(vec3(arr[0]/f,arr[1]/f,arr[2]/f));
     }
 
+    std::string vec3::print(bool out){
+        std::string a = std::to_string(arr[0]) + ";" + std::to_string(arr[1]) + ";" + std::to_string(arr[2]);
+        if(out){
+            std::cout<<a<<std::endl;
+        }
+        return (a);
+    }
+
     double vec3::size(){
         double size=0;
         for (int i = 0; i < 3; i++)
@@ -39,6 +47,14 @@
 		}
         size=sqrt(size);
         return(size);
+    }
+
+    vec3 average3(std::vector<vec3> vecs){
+        vec3 sum= vec3(0,0,0);
+        for (int i=0;i<vecs.size();i++){
+            sum=sum+vecs[i];
+        }
+        return (sum/vecs.size());
     }
 
 std::string intToSignedString(int i) {

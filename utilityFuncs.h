@@ -13,8 +13,11 @@ class vec3{
         vec3 operator-(const vec3 &ar);
         vec3 operator*(const double &f);
         vec3 operator/(const double &f);
+        std::string print(bool out=true);
         double size();
     };
+
+    vec3 average3(std::vector<vec3> vecs);
 
 std::vector<double> getColumn(std::vector<vec3> data,int i, double scale);
 

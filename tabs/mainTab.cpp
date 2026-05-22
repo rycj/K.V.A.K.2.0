@@ -20,18 +20,18 @@ void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constant
         ImGui::BeginChild("settings", UIConstants->NBodySettingsSize, ImGuiChildFlags_Borders, window_flags);
         if (ImGui::Button("new Body"))
                 {
-                    solver->bodies.push_back(Body(vec3(0.0f,0.0f,0.0f),vec3(0.0f,0.0f,0.0f),0.0f));
+                    solver->bodies_org.push_back(Body(vec3(0.0f,0.0f,0.0f),vec3(0.0f,0.0f,0.0f),0.0f));
                 }
-        for (int bodyI=0;bodyI<solver->bodies.size();bodyI++){
+        for (int bodyI=0;bodyI<solver->bodies_org.size();bodyI++){
             ImGui::BeginChild(std::to_string(bodyI).c_str(),ImVec2(UIConstants->NBodySettingsSize[0]*9/10,UIConstants->NBodySettingsSize[1]/10));
                 
                 ImGui::Text(("body "+std::to_string(bodyI)).c_str());
             
-                InputDouble3("position",solver->bodies[bodyI].position[0].arr.data());
+                InputDouble3("position",solver->bodies_org[bodyI].position[0].arr.data());
 
-                InputDouble3("velocity",solver->bodies[bodyI].velocity[0].arr.data());
+                InputDouble3("velocity",solver->bodies_org[bodyI].velocity[0].arr.data());
 
-                ImGui::InputDouble("mass",&solver->bodies[bodyI].mass);
+                ImGui::InputDouble("mass",&solver->bodies_org[bodyI].mass);
 
             ImGui::EndChild();
         }
@@ -42,9 +42,9 @@ void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constant
 
         if (ImGui::Button("START"))
         {   
-            for (int i=0;i<solver->bodies.size();i++)
+            for (int i=0;i<solver->bodies_org.size();i++)
             {
-                solver->bodies[i].clear();
+                solver->bodies_org[i].clear();
             }
             solver->solveNBody();
             // double topSize = 0;
@@ -64,6 +64,9 @@ void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constant
         {
             solver->plotIter=1;
             plot=true;
+            // for (int i=0;i<solver->bodies[2].position.size();i++){
+            //     std::cout<<solver->bodies[2].position[i].arr[0]<<";"<<solver->bodies[2].position[i].arr[1]<<"\n";
+            // }
         }
         ImGui::EndChild();
         ImGui::SameLine();
@@ -82,7 +85,7 @@ void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constant
                                 std::vector<double> xs(fullX.begin(),fullX.begin()+solver->plotIter);
                                 std::vector<double> ys(fullY.begin(),fullY.begin()+solver->plotIter);
                                 ImPlot::PlotLine("NBodyPlot",xs.data(),ys.data(),solver->plotIter);
-                                std::cout<<"plot time"<<solver->plotIter<<std::endl;
+                                // std::cout<<"plot time"<<solver->plotIter<<std::endl;
                             }
                             solver->plotIter+=10;
                         }
