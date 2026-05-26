@@ -3,7 +3,9 @@
 #include <implot.h>
 #include "colours.h"
 #include "tabs/mainTab.h"
+#include "tabs/simpleTab.h"
 #include "calcs/NBody/NBodySolver.h"
+#include "calcs/SIMPLE/Simple.h"
 #include "imguiBackends/imgui_impl_win32.h"
 #include "imguiBackends/imgui_impl_dx12.h"
 #include "constants.h"
@@ -179,6 +181,7 @@ int main(int, char **)
     ImVec4 *colors = style->Colors;
 
     NBodySolver NBodSol;
+    mesh m = mesh(3,1,3);
 
     ImGuiWindowFlags mainMenu_flags = 0;
     ImGuiWindowFlags tab_flags = 0;
@@ -253,6 +256,11 @@ int main(int, char **)
         {
         drawMainTab(UIConstants.main_viewport, tab_flags, &UIConstants,&NBodSol);
         }
+        if (activeTab == 1)
+        {
+        drawSimpleTab(UIConstants.main_viewport, tab_flags, &UIConstants,&m);
+        }
+
 
 
         bool show_demo = true;

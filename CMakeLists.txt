@@ -13,10 +13,11 @@ add_executable(DNDapp
     # stat.cpp
     tabs/mainTab.cpp
     calcs/NBody/NBodySolver.cpp
-    # tabs/magicTab.cpp
-    # tabs/inventoryTab.cpp
-    # tabs/featuresTab.cpp
-    # tabs/characterTab.cpp
+    calcs/SIMPLE/Simple.cpp
+    tabs/simpleTab.cpp
+    dataStructs/vecs.cpp
+    dataStructs/scalarField.cpp
+    dataStructs/vectorField2.cpp
     imguiBackends/imgui_impl_win32.cpp
     imguiBackends/imgui_impl_dx12.cpp
     utilityFuncs.cpp
