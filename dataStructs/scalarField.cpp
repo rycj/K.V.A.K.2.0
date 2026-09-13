@@ -82,6 +82,14 @@ scalarField scalarField::diag(vec2 origSize){
         return diagonal;
     }
 
+void scalarField::chDiag(float multiplier){
+    // assumes square matrix
+    for (int i=0;i<this->ny;i++){
+            this->operator()(i,i)=this->operator()(i,i)*multiplier;
+        }
+    }
+
+
 void scalarField::printGrid(int precision)
 {
     std::cout << "\nScalarField (" << nx << " x " << ny << ")\n";

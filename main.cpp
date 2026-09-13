@@ -4,8 +4,10 @@
 #include "colours.h"
 #include "tabs/mainTab.h"
 #include "tabs/simpleTab.h"
+#include "tabs/ODRTab.h"
 #include "calcs/NBody/NBodySolver.h"
 #include "calcs/SIMPLE/Simple.h"
+#include "calcs/ODR/odr.h"
 #include "imguiBackends/imgui_impl_win32.h"
 #include "imguiBackends/imgui_impl_dx12.h"
 #include "constants.h"
@@ -181,6 +183,7 @@ int main(int, char **)
     ImVec4 *colors = style->Colors;
 
     NBodySolver NBodSol;
+    ODR odrSolver;
     mesh m = mesh(3,1,3);
 
     ImGuiWindowFlags mainMenu_flags = 0;
@@ -260,11 +263,15 @@ int main(int, char **)
         {
         drawSimpleTab(UIConstants.main_viewport, tab_flags, &UIConstants,&m);
         }
+        if (activeTab == 2)
+        {
+        drawODRTab(UIConstants.main_viewport, tab_flags, &UIConstants,&odrSolver);
+        }
 
 
 
-        bool show_demo = true;
-        ImGui::ShowDemoWindow(&show_demo);
+        // bool show_demo = true;
+        // ImGui::ShowDemoWindow(&show_demo);
 
         // Rendering
         ImGui::Render();

@@ -14,7 +14,9 @@ add_executable(DNDapp
     tabs/mainTab.cpp
     calcs/NBody/NBodySolver.cpp
     calcs/SIMPLE/Simple.cpp
+    calcs/ODR/odr.cpp
     tabs/simpleTab.cpp
+    tabs/ODRTab.cpp
     dataStructs/vecs.cpp
     dataStructs/scalarField.cpp
     dataStructs/vectorField2.cpp

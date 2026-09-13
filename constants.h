@@ -11,6 +11,7 @@ class Constants {
     ImVec2 mainStatsSize;
     ImVec2 mainStatsPos;
     ImVec2 NBodySettingsSize;
+    ImVec2 FullPlotSize;
     ImVec2 NBodyPlotSize;
     ImVec2 NBodyPlotPos;
     double NBodyPosScale;

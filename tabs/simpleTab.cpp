@@ -59,8 +59,8 @@ void drawSimpleTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Consta
 
             ImPlot::PlotHeatmap(
                 "p",
-                // m->u.magnitude().data.data(),
-                m->p.data.data(),
+                m->u.magnitude().data.data(),
+                // m->p.data.data(),
                 m->ny,   // rows
                 m->nx,   // cols
                 pMin,

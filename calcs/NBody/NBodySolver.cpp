@@ -55,7 +55,7 @@ void NBodySolver::crash(int i, int j, int t){
     bodies[j].exists=false;
     bodies[j].velocity.push_back(vec3(0,0,0));
     std::cout<<"all is ready, pushing_back "<<bodies.size()<<" to ";
-    bodies.push_back(Body(position_new,velocity_new,mass_new,t));
+    bodies.push_back(Body(position_new,velocity_new,mass_new,ImVec4(1,0.3,0.6,1),t));
     std::cout<<bodies.size()<<std::endl;
     // bodies[j].mass=mass_new;
     // bodies[j].velocity.back()=velocity_new;

@@ -36,5 +36,7 @@ scalarField operator/(const double &a);
 
 scalarField diag(vec2 origSize);
 
+void chDiag(float multiplier);
+
 void scalarField::printGrid(int precision = 6);
 };

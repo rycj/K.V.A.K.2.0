@@ -89,7 +89,7 @@ scalarField AssembleUCoefficientMatrix(mesh& m, double mu){
         }
     }
     std::cout<<"A:"<<std::endl;
-    A.printGrid(1);
+    // A.printGrid(1);
     return A;
 }
 
@@ -99,7 +99,7 @@ scalarField AssemblePCoefficientMatrix(mesh& m, float alpha){
     m.uDiag = m.uDiag / alpha;
 
     std::cout<<"u diag:"<<std::endl;
-    m.uDiag.printGrid();
+    // m.uDiag.printGrid();
 
     std::cout<<(pow(m.h,2))<<std::endl;
 
@@ -144,7 +144,7 @@ vectorField2 AssembleURightSide(mesh& m, double mu){
         }
     }
     std::cout<<"u right side magnitude:"<< b(8).print() <<std::endl;
-    b.magnitude().printGrid();
+    // b.magnitude().printGrid();
     return b;
 }
 
@@ -174,7 +174,7 @@ scalarField ComputeDivU(mesh& m){
         );
     }
     std::cout<<"div u:"<<std::endl;
-    b.printGrid();
+    // b.printGrid();
     return b;
 }
 
@@ -193,7 +193,7 @@ vectorField2 ComputePressureGradient(mesh& m, bool corr){
         std::cout<<"computing p' gradient"<<std::endl;
         p = &m.pCorr;
 
-        p->printGrid();
+        // p->printGrid();
     }
 
 
@@ -219,9 +219,9 @@ vectorField2 ComputePressureGradient(mesh& m, bool corr){
         gradp(i).print(true);
     }
     std::cout<<"xs:"<<std::endl;
-    gradp.xs().printGrid();
+    // gradp.xs().printGrid();
     std::cout<<"ys:"<<std::endl;
-    gradp.ys().printGrid();
+    // gradp.ys().printGrid();
     return gradp;
 }
 
@@ -238,6 +238,7 @@ void SolveVelocityField(mesh& m, double mu){
     m.u = GaussSeidel(A, b);
     std::cout<<"u* solved"<<std::endl;
     m.uDiag = A.diag(vec2(m.nx,m.ny));
+    A.chDiag(0.7);
     std::cout<<"diagonal ok"<<std::endl;
 }
 
@@ -249,7 +250,7 @@ void SolvePressureField(mesh& m, float alpha){
     
     // B(0,0) = 1;
     B(0,B.ny-1)*=2;
-    B.printGrid();
+    // B.printGrid();
     std::cout<<"B:"<<std::endl;
     scalarField b = ComputeDivU(m);
     std::cout<<"right side ready"<<std::endl;
