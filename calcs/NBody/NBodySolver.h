@@ -25,8 +25,10 @@ class Body{
 
 class NBodySolver{
     public:
+    bool assist_plot;
     std::vector<Body> bodies;
     std::vector<Body> bodies_org;
+    std::vector<double> E_p;
     // int crashDist = 6378000*2;
     int crashDist = 1e10;
     int plotIter=0;

@@ -52,22 +52,28 @@ void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constant
                 solver->bodies_org.push_back(Body(vec3(-7.42933254e8f,0.0f,0.0f),vec3(0.0f,-12.5584f,0.0f),1.98847e30f,ImVec4(1,0.824,0,1)));
                 solver->bodies_org.push_back(Body(vec3(1.48854937e11f,0.0f,0.0f),vec3(0.0f,29772.63f,0.0f),5.9722e24f,ImVec4(0,0.7647,0.2235,1)));
                 solver->bodies_org.push_back(Body(vec3(7.77824225e11f,0.0f,0.0f),vec3(0.0f,13049.80f,0.0f),1.89813e27f,ImVec4(0.6,0.6,0.6,1)));
+                solver->endTimeDays=3650;
+                solver->tStep=6;
             }
             ImGui::SameLine();
             if (ImGui::Button("unstable"))
             {   
-                solver->bodies_org.push_back(Body(vec3(-1.60e11f,0.0e0f,0.0f),vec3(0.0e0f,-1.5e4f,0.0e0f),1.0e30f,ImVec4(1,0.824,0,1)));
-                solver->bodies_org.push_back(Body(vec3(0.80e11f,1.10e11f,0.0e0f),vec3(-1.55e4f,1.05e4f,0.0e0f),7.0e29f,ImVec4(0,0.7647,0.2235,1)));
-                solver->bodies_org.push_back(Body(vec3(1.10e11f,-1.00e11f,0.0e0f),vec3(1.65e4f,1.00e4f,0.0e0f),5.0e29f,ImVec4(0.6,0.6,0.6,1)));
+                solver->bodies_org.push_back(Body(vec3(0.0e0f,0.0e0f,0.0e0f),vec3(0.0e0f,0.0e0f,0.0e0f),1.98847e30f,ImVec4(1,0.824,0,1)));
+                solver->bodies_org.push_back(Body(vec3(6.00e11f,1.40e9f,0.0e0f),vec3(5.00e3f,8.00e3f,0.0e0f),1.0e3f,ImVec4(0.6,0.6,0.6,1)));
+                solver->bodies_org.push_back(Body(vec3(7.785e11f,0.0e0f,0.0e0f),vec3(0.0e0f,1.3078e4f,0.0e0f),1e30f,ImVec4(0,0.7647,0.2235,1)));
                 solver->endTimeDays=3650;
+                solver->tStep=6;
             }
             ImGui::SameLine();
             if (ImGui::Button("gravity assist"))
             {   
                 solver->bodies_org.push_back(Body(vec3(0.0e0f,0.0e0f,0.0e0f),vec3(0.0e0f,0.0e0f,0.0e0f),1.98847e30f,ImVec4(1,0.824,0,1)));
-                solver->bodies_org.push_back(Body(vec3(7.785e11f,0.0e0f,0.0e0f),vec3(0.0e0f,1.3078e4f,0.0e0f),1.89813e27f,ImVec4(0,0.7647,0.2235,1)));
                 solver->bodies_org.push_back(Body(vec3(6.00e11f,1.40e9f,0.0e0f),vec3(5.00e3f,8.00e3f,0.0e0f),1.0e3f,ImVec4(0.6,0.6,0.6,1)));
-                solver->endTimeDays=3650;
+                solver->bodies_org.push_back(Body(vec3(7.785e11f,0.0e0f,0.0e0f),vec3(0.0e0f,1.3078e4f,0.0e0f),1.89813e27f,ImVec4(0,0.7647,0.2235,1)));
+                solver->endTimeDays=750;
+                solver->tStep=6;
+                solver->assist_plot=true;
+
             }
             solver->recalcTconstants();
 
@@ -98,6 +104,26 @@ void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constant
             // for (int i=0;i<solver->bodies[2].position.size();i++){
             //     std::cout<<solver->bodies[2].position[i].arr[0]<<";"<<solver->bodies[2].position[i].arr[1]<<"\n";
             // }
+        }
+
+        if (solver->assist_plot){
+            ImGui::BeginChild("assistPlotWindow");
+                if (ImPlot::BeginPlot("Spacecraft Energy")) {
+
+                    ImPlot::SetupAxes(
+                        "Time (s)",
+                        "Specific Energy (J/kg)"
+                    );
+
+                    ImPlot::PlotLine(
+                        "Specific Energy",
+                        solver->E_p.data(),
+                        solver->plotIter
+                    );
+
+                    ImPlot::EndPlot();
+                }
+            ImGui::EndChild();
         }
         ImGui::EndChild();
         ImGui::SameLine();
