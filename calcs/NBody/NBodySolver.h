@@ -7,6 +7,7 @@
 class Body{
     public:
         double mass;
+        vec3 dv=vec3(0,0,0);
         bool exists=true;
         std::vector<vec3> position;
         std::vector<vec3> velocity;
@@ -25,10 +26,11 @@ class Body{
 
 class NBodySolver{
     public:
-    bool assist_plot;
+    bool assist_plot=false;
     std::vector<Body> bodies;
     std::vector<Body> bodies_org;
     std::vector<double> E_p;
+    std::vector<double> times;
     // int crashDist = 6378000*2;
     int crashDist = 1e10;
     int plotIter=0;

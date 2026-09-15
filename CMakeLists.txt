@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(DNDapp LANGUAGES CXX)
+project(KVAK LANGUAGES CXX)
 
 find_package(imgui CONFIG REQUIRED)
 find_package(implot CONFIG REQUIRED)
 
-add_executable(DNDapp
+add_executable(KVAK
     main.cpp
     constants.cpp
     colours.cpp
@@ -26,11 +26,11 @@ add_executable(DNDapp
 
 )
 
-target_include_directories(DNDapp PRIVATE
+target_include_directories(KVAK PRIVATE
     ${VCPKG_INSTALLED_DIR}/x64-windows/include
 )
 
-target_link_libraries(DNDapp PRIVATE
+target_link_libraries(KVAK PRIVATE
     imgui::imgui
     implot::implot
     d3d12

@@ -52,26 +52,28 @@ void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constant
                 solver->bodies_org.push_back(Body(vec3(-7.42933254e8f,0.0f,0.0f),vec3(0.0f,-12.5584f,0.0f),1.98847e30f,ImVec4(1,0.824,0,1)));
                 solver->bodies_org.push_back(Body(vec3(1.48854937e11f,0.0f,0.0f),vec3(0.0f,29772.63f,0.0f),5.9722e24f,ImVec4(0,0.7647,0.2235,1)));
                 solver->bodies_org.push_back(Body(vec3(7.77824225e11f,0.0f,0.0f),vec3(0.0f,13049.80f,0.0f),1.89813e27f,ImVec4(0.6,0.6,0.6,1)));
-                solver->endTimeDays=3650;
-                solver->tStep=6;
+                solver->endTimeDays=10000;
+                solver->tStepHours=24;
+                solver->assist_plot=false;
             }
             ImGui::SameLine();
             if (ImGui::Button("unstable"))
             {   
                 solver->bodies_org.push_back(Body(vec3(0.0e0f,0.0e0f,0.0e0f),vec3(0.0e0f,0.0e0f,0.0e0f),1.98847e30f,ImVec4(1,0.824,0,1)));
                 solver->bodies_org.push_back(Body(vec3(6.00e11f,1.40e9f,0.0e0f),vec3(5.00e3f,8.00e3f,0.0e0f),1.0e3f,ImVec4(0.6,0.6,0.6,1)));
-                solver->bodies_org.push_back(Body(vec3(7.785e11f,0.0e0f,0.0e0f),vec3(0.0e0f,1.3078e4f,0.0e0f),1e30f,ImVec4(0,0.7647,0.2235,1)));
+                solver->bodies_org.push_back(Body(vec3(7.785e11f,0.0e0f,0.0e0f),vec3(0.0e0f,1.3078e4f,0.0e0f),1e30f,ImVec4(1,0,0,1)));
                 solver->endTimeDays=3650;
-                solver->tStep=6;
+                solver->tStepHours=6;
+                solver->assist_plot=false;
             }
             ImGui::SameLine();
             if (ImGui::Button("gravity assist"))
             {   
                 solver->bodies_org.push_back(Body(vec3(0.0e0f,0.0e0f,0.0e0f),vec3(0.0e0f,0.0e0f,0.0e0f),1.98847e30f,ImVec4(1,0.824,0,1)));
-                solver->bodies_org.push_back(Body(vec3(6.00e11f,1.40e9f,0.0e0f),vec3(5.00e3f,8.00e3f,0.0e0f),1.0e3f,ImVec4(0.6,0.6,0.6,1)));
+                solver->bodies_org.push_back(Body(vec3(6.00e11f,1.40e9f,0.0e0f),vec3(8.00e3f,12.00e3f,0.0e0f),1.0e3f,ImVec4(0.6,0.6,0.6,1)));
                 solver->bodies_org.push_back(Body(vec3(7.785e11f,0.0e0f,0.0e0f),vec3(0.0e0f,1.3078e4f,0.0e0f),1.89813e27f,ImVec4(0,0.7647,0.2235,1)));
                 solver->endTimeDays=750;
-                solver->tStep=6;
+                solver->tStepHours=6;
                 solver->assist_plot=true;
 
             }
@@ -105,18 +107,21 @@ void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constant
             //     std::cout<<solver->bodies[2].position[i].arr[0]<<";"<<solver->bodies[2].position[i].arr[1]<<"\n";
             // }
         }
+        ImGui::Text("Add bodies(can use preset)->START->...->plot");
 
         if (solver->assist_plot){
             ImGui::BeginChild("assistPlotWindow");
                 if (ImPlot::BeginPlot("Spacecraft Energy")) {
 
                     ImPlot::SetupAxes(
-                        "Time (s)",
+                        "Time (h)",
                         "Specific Energy (J/kg)"
                     );
+                    ImPlot::SetupAxesLimits(0, 20e3,-1.5e8, 0);
 
                     ImPlot::PlotLine(
                         "Specific Energy",
+                        solver->times.data(),
                         solver->E_p.data(),
                         solver->plotIter
                     );
@@ -131,8 +136,8 @@ void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constant
             // ImGui::SetNextWindowPos(UIConstants->NBodyPlotPos);
 
             if (ImPlot::BeginPlot("My Plot",UIConstants->NBodyPlotSize)) {
-                    ImPlot::SetupAxes("X", "Y");
-                    ImPlot::SetupAxesLimits(-150e9, 150e9,-150e9, 150e9);
+                    ImPlot::SetupAxes("x(m)", "y(m)");
+                    ImPlot::SetupAxesLimits(-1e12, 1e12,-1e12, 1e12);
                     if (plot==true){
                         if (solver->plotIter<solver->bodies[0].position.size() && solver->plotIter!=0){
                             for (int BodyI=0;BodyI<solver->bodies.size();BodyI++){

@@ -30,11 +30,12 @@ Hlist.clear();
 }
 
 void ODR::runODR(){
-    while (N>1){
-        float h_local=L/N;
-        Elist.push_back(log10(Eulerror(h_local,N)));
-        IElist.push_back(log10(ImprovedEulerror(h_local,N)));
+    int N_local=N;
+    while (N_local>1){
+        float h_local=L/N_local;
+        Elist.push_back(log10(Eulerror(h_local,N_local)));
+        IElist.push_back(log10(ImprovedEulerror(h_local,N_local)));
         Hlist.push_back(log10(h_local));
-        N*=0.9;
+        N_local*=0.9;
     }
 }

@@ -78,22 +78,25 @@ void NBodySolver::solveNBody(){
         }
         if (endTime%tStep==0){
             int Nsteps = (int)(endTime / tStep);
-            double E0 =0.5 * bodies[1].velocity.back().size()* bodies[1].velocity.back().size()- G * bodies[0].mass / bodies[1].position.back().size();
+            E_p.clear();
+            times.clear();
 
-            E_p.push_back(E0);
-
+            E_p.push_back(0.5 * bodies[1].velocity.back().size()* bodies[1].velocity.back().size()- G * bodies[0].mass / bodies[1].position.back().size());
+            times.push_back(0);
                 for (int t = 0; t < Nsteps; t++){
                     // std::cout<<"precessing step "<<t<<std::endl;
                     for (int bodyI=0;bodyI<bodies.size();bodyI++){
+                        bodies[bodyI].dv=calcDv(bodyI,t);
+                    }
+                    for (int bodyI=0;bodyI<bodies.size();bodyI++){
 
-                        bodies[bodyI].velocity.push_back((bodies[bodyI].velocity.back())+calcDv(bodyI,t)*tStep);
+                        bodies[bodyI].velocity.push_back((bodies[bodyI].velocity.back())+bodies[bodyI].dv*tStep);
 
                         bodies[bodyI].position.push_back((bodies[bodyI].position.back())+bodies[bodyI].velocity.back()*tStep);
                     }
 
-                    double E =0.5 * bodies[1].velocity.back().size()* bodies[1].velocity.back().size()- G * bodies[0].mass / bodies[1].position.back().size();
-
-                    E_p.push_back(E - E0);
+                    E_p.push_back(0.5 * bodies[1].velocity.back().size()* bodies[1].velocity.back().size()- G * bodies[0].mass / bodies[1].position.back().size());
+                    times.push_back(tStep*t/3600);
                 }
         }
         else{

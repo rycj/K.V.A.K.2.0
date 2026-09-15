@@ -20,16 +20,13 @@ void drawODRTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constants
 
             ImGui::Text("ODR");
 
-            ImGui::InputFloat("L",&odrSolver->L);
-            ImGui::InputInt("N",&odrSolver->N);
+            // ImGui::InputFloat("L",&odrSolver->L);
+            ImGui::InputInt("N steps",&odrSolver->N);
+            ImGui::Text("largest number of steps (1/smallest timestep)");
             if (ImGui::Button("run"))
             {
                 odrSolver->clear();
                 odrSolver->runODR();
-            }
-            if (ImGui::Button("test"))
-            {
-                std::cout<<"E: "<<odrSolver->Elist.size()<<"\n"<<"IE: "<<odrSolver->IElist.size()<<"\n"<<"H: "<<odrSolver->Hlist.size()<<std::endl;
             }
 
         ImGui::EndChild();
@@ -37,6 +34,7 @@ void drawODRTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constants
         ImGui::BeginChild("test",ImVec2(-1,-1));
 
         if (ImPlot::BeginPlot("odrPlot",UIConstants->FullPlotSize)) {
+            ImPlot::SetupAxes("log(∆t)","log(Error)");
             ImPlot::SetupAxesLimits(-15, 0, -20, 0);
             ImPlot::SetNextMarkerStyle(ImPlotMarker_Circle, 4.0f);
             ImPlot::PlotLine("E", odrSolver->Hlist.data(), odrSolver->Elist.data(), static_cast<int>(odrSolver->Elist.size()));
