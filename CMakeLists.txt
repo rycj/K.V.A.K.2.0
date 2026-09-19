@@ -15,8 +15,10 @@ add_executable(KVAK
     calcs/NBody/NBodySolver.cpp
     calcs/SIMPLE/Simple.cpp
     calcs/ODR/odr.cpp
+    calcs/FDM/FDM.cpp
     tabs/simpleTab.cpp
     tabs/ODRTab.cpp
+    tabs/FDMTab.cpp
     dataStructs/vecs.cpp
     dataStructs/scalarField.cpp
     dataStructs/vectorField2.cpp

@@ -5,90 +5,115 @@
 #include <cmath>
 #include <iomanip>
 
-double& scalarField::operator()(int i, int j) {
-        return data[i + j * nx];
-    }
+double &scalarField::operator()(int i, int j)
+{
+    return data[i + j * nx];
+}
 
-double& scalarField::operator()(int i) {
-        return data[i];
-    }
+double &scalarField::operator()(int i)
+{
+    return data[i];
+}
 
-scalarField scalarField::operator+(const scalarField &ar) {
-        if (nx==ar.nx && ny==ar.ny){
-            scalarField sum = scalarField(nx,ny);
-            for (int i=0;i<size;i++){
-                sum(i)=data[i]+ar.data[i];
-            }
-            return sum;
+scalarField scalarField::operator+(const scalarField &ar)
+{
+    if (nx == ar.nx && ny == ar.ny)
+    {
+        scalarField sum = scalarField(nx, ny);
+        for (int i = 0; i < size; i++)
+        {
+            sum(i) = data[i] + ar.data[i];
         }
-        else{std::cout<<"field dimensions don't match"<<std::endl;}
+        return sum;
     }
+    else
+    {
+        std::cout << "field dimensions don't match" << std::endl;
+    }
+}
 
-scalarField scalarField::operator-(const scalarField &ar) {
-        if (nx==ar.nx && ny==ar.ny){
-            scalarField sum = scalarField(nx,ny);
-            for (int i=0;i<size;i++){
-                sum(i)=data[i]-ar.data[i];
-            }
-            return sum;
+scalarField scalarField::operator-(const scalarField &ar)
+{
+    if (nx == ar.nx && ny == ar.ny)
+    {
+        scalarField sum = scalarField(nx, ny);
+        for (int i = 0; i < size; i++)
+        {
+            sum(i) = data[i] - ar.data[i];
         }
-        else{std::cout<<"field dimensions don't match"<<std::endl;}
+        return sum;
     }
-
-scalarField scalarField::operator*(const double &a) {
-    scalarField res = scalarField(nx,ny);
-    for (int i=0;i<size;i++){
-        res(i)=data[i]*a;
-        }
-        return res;
+    else
+    {
+        std::cout << "field dimensions don't match" << std::endl;
     }
+}
 
-vectorField2 scalarField::operator*(const vectorField2 &ar) {
-    vectorField2 res(nx,ny);
-    std::cout<<"fails here?"<<std::endl;
-    for (int i=0;i<size;i++){
+scalarField scalarField::operator*(const double &a)
+{
+    scalarField res = scalarField(nx, ny);
+    for (int i = 0; i < size; i++)
+    {
+        res(i) = data[i] * a;
+    }
+    return res;
+}
+
+vectorField2 scalarField::operator*(const vectorField2 &ar)
+{
+    vectorField2 res(nx, ny);
+    std::cout << "fails here?" << std::endl;
+    for (int i = 0; i < size; i++)
+    {
         // std::cout<<i<<"   "<<size<<"   "<<ar.size<<std::endl;
-        res(i)=ar.data[i]*data[i];
-        }
-
-        return res;
+        res(i) = ar.data[i] * data[i];
     }
 
-scalarField scalarField::inverseVals() {
-    scalarField res = scalarField(nx,ny);
-    std::cout<<"inverting"<<std::endl;
-    for (int i=0;i<size;i++){
-        res(i)=1.0/data[i];
-        }
-        std::cout<<"inverted"<<std::endl;
-        return res;
-    }
+    return res;
+}
 
-scalarField scalarField::operator/(const double &a) {
-    scalarField res = scalarField(nx,ny);
-    for (int i=0;i<size;i++){
-        res(i)=data[i]/a;
-        }
-        return res;
+scalarField scalarField::inverseVals()
+{
+    scalarField res = scalarField(nx, ny);
+    std::cout << "inverting" << std::endl;
+    for (int i = 0; i < size; i++)
+    {
+        res(i) = 1.0 / data[i];
     }
+    std::cout << "inverted" << std::endl;
+    return res;
+}
 
-scalarField scalarField::diag(vec2 origSize){
-    scalarField diagonal=scalarField(origSize(0),origSize(1));
-    std::cout<<"diagsize in diag at start "<<diagonal.size<<std::endl;
-    for (int i=0;i<origSize(0)*origSize(1);i++){
-            diagonal(i)=this->operator()(this->ny-1-i,i);
-        }
-        std::cout<<"diagsize in diag at end "<<diagonal.size<<std::endl;
-        return diagonal;
+scalarField scalarField::operator/(const double &a)
+{
+    scalarField res = scalarField(nx, ny);
+    for (int i = 0; i < size; i++)
+    {
+        res(i) = data[i] / a;
     }
+    return res;
+}
 
-void scalarField::chDiag(float multiplier){
+scalarField scalarField::diag(vec2 origSize)
+{
+    scalarField diagonal = scalarField(origSize(0), origSize(1));
+    std::cout << "diagsize in diag at start " << diagonal.size << std::endl;
+    for (int i = 0; i < origSize(0) * origSize(1); i++)
+    {
+        diagonal(i) = this->operator()(this->ny - 1 - i, i);
+    }
+    std::cout << "diagsize in diag at end " << diagonal.size << std::endl;
+    return diagonal;
+}
+
+void scalarField::chDiag(float multiplier)
+{
     // assumes square matrix
-    for (int i=0;i<this->ny;i++){
-            this->operator()(i,i)=this->operator()(i,i)*multiplier;
-        }
+    for (int i = 0; i < this->ny; i++)
+    {
+        this->operator()(i, i) = this->operator()(i, i) * multiplier;
     }
-
+}
 
 void scalarField::printGrid(int precision)
 {
@@ -118,4 +143,14 @@ void scalarField::printGrid(int precision)
     }
 
     std::cout << std::defaultfloat;
+}
+
+std::vector<double> scalarField::getRow(int row)
+{
+    std::vector<double> result;
+    for (int i = 0; i < nx; i++)
+    {
+        result.push_back(data[i + row * nx]);
+    }
+    return result;
 }

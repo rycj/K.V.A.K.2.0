@@ -2,8 +2,12 @@
 #include <imgui.h>
 #include <string>
 #pragma once
-class Constants {
-  public:
+
+// double pi = 3.141592653589;
+
+class Constants
+{
+public:
     ImGuiViewport *main_viewport;
     ImVec2 mainWindowSize;
     ImVec2 tabPos;

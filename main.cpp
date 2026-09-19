@@ -5,9 +5,11 @@
 #include "tabs/mainTab.h"
 #include "tabs/simpleTab.h"
 #include "tabs/ODRTab.h"
+#include "tabs/FDMTab.h"
 #include "calcs/NBody/NBodySolver.h"
 #include "calcs/SIMPLE/Simple.h"
 #include "calcs/ODR/odr.h"
+#include "calcs/FDM/FDM.h"
 #include "imguiBackends/imgui_impl_win32.h"
 #include "imguiBackends/imgui_impl_dx12.h"
 #include "constants.h"
@@ -141,7 +143,7 @@ int main(int, char **)
     ImPlot::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     io.Fonts->AddFontDefault();
-    
+
     (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
@@ -184,8 +186,8 @@ int main(int, char **)
 
     NBodySolver NBodSol;
     ODR odrSolver;
-    mesh m = mesh(3,1,3);
-
+    mesh m = mesh(3, 1, 3);
+    FDM fdmSolver;
     ImGuiWindowFlags mainMenu_flags = 0;
     ImGuiWindowFlags tab_flags = 0;
     mainMenu_flags |= ImGuiWindowFlags_NoTitleBar;
@@ -258,18 +260,20 @@ int main(int, char **)
         ImGui::End();
         if (activeTab == 0)
         {
-        drawMainTab(UIConstants.main_viewport, tab_flags, &UIConstants,&NBodSol);
+            drawMainTab(UIConstants.main_viewport, tab_flags, &UIConstants, &NBodSol);
         }
         if (activeTab == 1)
         {
-        drawSimpleTab(UIConstants.main_viewport, tab_flags, &UIConstants,&m);
+            drawSimpleTab(UIConstants.main_viewport, tab_flags, &UIConstants, &m);
         }
         if (activeTab == 2)
         {
-        drawODRTab(UIConstants.main_viewport, tab_flags, &UIConstants,&odrSolver);
+            drawODRTab(UIConstants.main_viewport, tab_flags, &UIConstants, &odrSolver);
         }
-
-
+        if (activeTab == 3)
+        {
+            drawFDMTab(UIConstants.main_viewport, tab_flags, &UIConstants, &fdmSolver);
+        }
 
         // bool show_demo = true;
         // ImGui::ShowDemoWindow(&show_demo);
