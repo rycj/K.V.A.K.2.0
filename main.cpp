@@ -275,8 +275,8 @@ int main(int, char **)
             drawFDMTab(UIConstants.main_viewport, tab_flags, &UIConstants, &fdmSolver);
         }
 
-        // bool show_demo = true;
-        // ImGui::ShowDemoWindow(&show_demo);
+        bool show_demo = true;
+        ImGui::ShowDemoWindow(&show_demo);
 
         // Rendering
         ImGui::Render();

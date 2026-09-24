@@ -55,7 +55,7 @@ void FDM::solveStringEQ(std::string IC, std::string BCType, double BCLeft, doubl
 {
     double dx = X / (nx - 1);
     double dt = T / (nt - 1);
-    FDMMesh = scalarField(nx, nt + 1);
+    FDMMesh = scalarField(nx, nt + 2);
     xs.clear();
 
     // apply IE
@@ -63,7 +63,8 @@ void FDM::solveStringEQ(std::string IC, std::string BCType, double BCLeft, doubl
     {
         for (int i = 0; i < nx; i++)
         {
-            FDMMesh(i, 0) = 3 * sin((i * dx) * 3.141592653589);
+            FDMMesh(i, 1) = 3 * sin((i * dx) * 3.141592653589);
+            FDMMesh(i, 0) = FDMMesh(i, 1);
             xs.push_back(i * dx);
         }
     }
@@ -87,14 +88,27 @@ void FDM::solveStringEQ(std::string IC, std::string BCType, double BCLeft, doubl
     };
 
     // main loop
-    for (int j = 1; j <= nt; j++)
+    for (int j = 2; j <= nt; j++)
     {
         for (int i = 1; i < nx - 1; i++)
         {
-            // std::cout << "\ni: " << i << "\nj: " << j << "\nu(i-1,j-1): " << FDMMesh(i - 1, j - 1) << "\nu(i,j-1): " << FDMMesh(i, j - 1) << "\nu(i+1,j-1): " << FDMMesh(i + 1, j - 1);
-            // FDMMesh(i, j) = FDMMesh(i, j - 1) + pow(alpha, 2) * (FDMMesh(i - 1, j - 1) - 2 * FDMMesh(i, j - 1) + FDMMesh(i + 1, j - 1)) / (pow(dx, 2) / dt);
-            // std::cout << "\nu(i,j)" << FDMMesh(i, j) << std::endl;
+            FDMMesh(i, j) = 2 * FDMMesh(i, j - 1) - FDMMesh(i, j - 2) + pow(alpha, 2) * (FDMMesh(i - 1, j - 1) - 2 * FDMMesh(i, j - 1) + FDMMesh(i + 1, j - 1)) * pow(dt, 2) / (pow(dx, 2));
         }
     }
-    // FDMMesh.printGrid(2);
+}
+void FDM::runFDM()
+{
+    switch (selectedEQ)
+    {
+    case 0:
+    {
+        solveHeatEQ("sin", "Dirichlet", 0, 0);
+        break;
+    }
+    case 1:
+    {
+        solveStringEQ("sin", "Dirichlet", 0, 0);
+        break;
+    }
+    }
 }

@@ -19,14 +19,16 @@ void drawFDMTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constants
     ImGui::Text("Finite Difference Method");
 
     // ImGui::InputFloat("L",&odrSolver->L);
+    ImGui::Combo("Equation", &fdmSolver->selectedEQ, "Heat\0String\0\0");
     ImGui::InputDouble("X", &fdmSolver->X);
     ImGui::InputDouble("T", &fdmSolver->T);
     ImGui::InputInt("nx", &fdmSolver->nx);
     ImGui::InputInt("nt", &fdmSolver->nt);
+    ImGui::InputDouble("alpha", &fdmSolver->alpha);
 
     if (ImGui::Button("run"))
     {
-        fdmSolver->solveHeatEQ("si", "Dirichlet", 15, 10);
+        fdmSolver->runFDM();
     }
 
     ImGui::EndChild();
