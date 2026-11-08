@@ -1,5 +1,6 @@
 #include <vector>
 #include "../../dataStructs/scalarField.h"
+#include <functional>
 #pragma once
 class FDM
 {
@@ -14,6 +15,9 @@ public:
     double T = 1.0;
     void solveHeatEQ(std::string IC, std::string BCType, double BCLeft, double BCRight);
     void solveStringEQ(std::string IC, std::string BCType, double BCLeft, double BCRight);
+    void fillIC(std::string IC);
+    void fillBCs(std::string BCType, double BCLeft, double BCRight);
+    void solveEQ(std::function<void()> EQFunc);
     void runFDM();
     double alpha = 0.5;
 };

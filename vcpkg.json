@@ -1,6 +1,7 @@
 {
   "dependencies": [
     "imgui",
-    "implot"
+    "implot",
+    "implot3d"
   ]
 }

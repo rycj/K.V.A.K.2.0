@@ -1,5 +1,6 @@
 #include <imgui.h>
 #include <implot.h>
+#include <implot3D.h>
 #include "../constants.h"
 #include "iostream"
 #include "../utilityFuncs.h"
@@ -9,173 +10,181 @@
 
 bool plot;
 
-void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constants* UIConstants, NBodySolver* solver)
+void drawMainTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constants *UIConstants, NBodySolver *solver)
 {
     ImGuiWindowFlags window_flags = 0;
     ImGui::SetNextWindowPos(UIConstants->tabPos);
     ImGui::SetNextWindowSize(UIConstants->tabSize);
     ImGui::Begin("NBody", NULL, flags);
 
-        ImGui::SetNextWindowPos(UIConstants->tabPos);
+    ImGui::SetNextWindowPos(UIConstants->tabPos);
 
-        ImGui::BeginChild("settings", UIConstants->NBodySettingsSize, ImGuiChildFlags_Borders, window_flags);
-        if (ImGui::Button("new Body"))
-                {
-                    solver->bodies_org.push_back(Body(vec3(0.0f,0.0f,0.0f),vec3(0.0f,0.0f,0.0f),0.0f));
-                }
-        for (int bodyI=0;bodyI<solver->bodies_org.size();bodyI++){
-            ImGui::BeginChild(std::to_string(bodyI).c_str(),ImVec2(UIConstants->NBodySettingsSize[0]*9/10,UIConstants->NBodySettingsSize[1]/8));
-                
-                ImGui::Text(("body "+std::to_string(bodyI)).c_str());
-            
-                InputDouble3("position",solver->bodies_org[bodyI].position[0].arr.data());
+    ImGui::BeginChild("settings", UIConstants->NBodySettingsSize, ImGuiChildFlags_Borders, window_flags);
+    if (ImGui::Button("new Body"))
+    {
+        solver->bodies_org.push_back(Body(vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f), 0.0f));
+    }
+    for (int bodyI = 0; bodyI < solver->bodies_org.size(); bodyI++)
+    {
+        ImGui::BeginChild(std::to_string(bodyI).c_str(), ImVec2(UIConstants->NBodySettingsSize[0] * 9 / 10, UIConstants->NBodySettingsSize[1] / 8));
 
-                InputDouble3("velocity",solver->bodies_org[bodyI].velocity[0].arr.data());
+        ImGui::Text(("body " + std::to_string(bodyI)).c_str());
 
-                ImGui::InputDouble("mass",&solver->bodies_org[bodyI].mass);
+        InputDouble3("position", solver->bodies_org[bodyI].position[0].arr.data());
 
-                ImGui::ColorEdit4("Color", &solver->bodies_org[bodyI].colour.x);
+        InputDouble3("velocity", solver->bodies_org[bodyI].velocity[0].arr.data());
 
-                if (ImGui::Button("delete"))
-                {
-                    solver->bodies_org.erase(solver->bodies_org.begin()+bodyI);
-                }
+        ImGui::InputDouble("mass", &solver->bodies_org[bodyI].mass);
 
-            ImGui::EndChild();
-        }
+        ImGui::ColorEdit4("Color", &solver->bodies_org[bodyI].colour.x);
 
-            ImGui::SliderInt("end time (d)", &solver->endTimeDays, 1, 10000);
-            ImGui::SliderInt("time step (h)", &solver->tStepHours, 1, 24);
-            ImGui::Text("Load preset:");
-            if (ImGui::Button("stable"))
-            {   
-                solver->bodies_org.push_back(Body(vec3(-7.42933254e8f,0.0f,0.0f),vec3(0.0f,-12.5584f,0.0f),1.98847e30f,ImVec4(1,0.824,0,1)));
-                solver->bodies_org.push_back(Body(vec3(1.48854937e11f,0.0f,0.0f),vec3(0.0f,29772.63f,0.0f),5.9722e24f,ImVec4(0,0.7647,0.2235,1)));
-                solver->bodies_org.push_back(Body(vec3(7.77824225e11f,0.0f,0.0f),vec3(0.0f,13049.80f,0.0f),1.89813e27f,ImVec4(0.6,0.6,0.6,1)));
-                solver->endTimeDays=10000;
-                solver->tStepHours=24;
-                solver->assist_plot=false;
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("unstable"))
-            {   
-                solver->bodies_org.push_back(Body(vec3(0.0e0f,0.0e0f,0.0e0f),vec3(0.0e0f,0.0e0f,0.0e0f),1.98847e30f,ImVec4(1,0.824,0,1)));
-                solver->bodies_org.push_back(Body(vec3(6.00e11f,1.40e9f,0.0e0f),vec3(5.00e3f,8.00e3f,0.0e0f),1.0e3f,ImVec4(0.6,0.6,0.6,1)));
-                solver->bodies_org.push_back(Body(vec3(7.785e11f,0.0e0f,0.0e0f),vec3(0.0e0f,1.3078e4f,0.0e0f),1e30f,ImVec4(1,0,0,1)));
-                solver->endTimeDays=3650;
-                solver->tStepHours=6;
-                solver->assist_plot=false;
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("gravity assist"))
-            {   
-                solver->bodies_org.push_back(Body(vec3(0.0e0f,0.0e0f,0.0e0f),vec3(0.0e0f,0.0e0f,0.0e0f),1.98847e30f,ImVec4(1,0.824,0,1)));
-                solver->bodies_org.push_back(Body(vec3(6.00e11f,1.40e9f,0.0e0f),vec3(8.00e3f,12.00e3f,0.0e0f),1.0e3f,ImVec4(0.6,0.6,0.6,1)));
-                solver->bodies_org.push_back(Body(vec3(7.785e11f,0.0e0f,0.0e0f),vec3(0.0e0f,1.3078e4f,0.0e0f),1.89813e27f,ImVec4(0,0.7647,0.2235,1)));
-                solver->endTimeDays=750;
-                solver->tStepHours=6;
-                solver->assist_plot=true;
-
-            }
-            solver->recalcTconstants();
-
-        if (ImGui::Button("START"))
-        {   
-            for (int i=0;i<solver->bodies_org.size();i++)
-            {
-                solver->bodies_org[i].clear();
-            }
-            solver->solveNBody();
-            // double topSize = 0;
-            // for (int i=0;i<solver->bodies[1].velocity.size();i++)
-            // {
-                
-            //     if (solver->bodies[1].velocity[i].size()>topSize)
-            //     {
-                    
-            //         topSize=solver->bodies[1].velocity[i].size();
-            //     }
-            // }
-            // std::cout<<topSize<<"\n";
-            
-        }
-        if (ImGui::Button("plot"))
+        if (ImGui::Button("delete"))
         {
-            solver->plotIter=1;
-            plot=true;
-            // for (int i=0;i<solver->bodies[2].position.size();i++){
-            //     std::cout<<solver->bodies[2].position[i].arr[0]<<";"<<solver->bodies[2].position[i].arr[1]<<"\n";
-            // }
+            solver->bodies_org.erase(solver->bodies_org.begin() + bodyI);
         }
-        ImGui::Text("Add bodies(can use preset)->START->...->plot");
 
-        if (solver->assist_plot){
-            ImGui::BeginChild("assistPlotWindow");
-                if (ImPlot::BeginPlot("Spacecraft Energy")) {
+        ImGui::EndChild();
+    }
 
-                    ImPlot::SetupAxes(
-                        "Time (h)",
-                        "Specific Energy (J/kg)"
-                    );
-                    ImPlot::SetupAxesLimits(0, 20e3,-1.5e8, 0);
+    ImGui::SliderInt("end time (d)", &solver->endTimeDays, 1, 10000);
+    ImGui::SliderInt("time step (h)", &solver->tStepHours, 1, 24);
+    ImGui::Text("Load preset:");
+    if (ImGui::Button("stable"))
+    {
+        solver->bodies_org.push_back(Body(vec3(-7.42933254e8f, 0.0f, 0.0f), vec3(0.0f, -12.5584f, 0.0f), 1.98847e30f, ImVec4(1, 0.824, 0, 1)));
+        solver->bodies_org.push_back(Body(vec3(1.48854937e11f, 0.0f, 0.0f), vec3(0.0f, 29772.63f, 0.0f), 5.9722e24f, ImVec4(0, 0.7647, 0.2235, 1)));
+        solver->bodies_org.push_back(Body(vec3(7.77824225e11f, 0.0f, 0.0f), vec3(0.0f, 13049.80f, 0.0f), 1.89813e27f, ImVec4(0.6, 0.6, 0.6, 1)));
+        solver->endTimeDays = 10000;
+        solver->tStepHours = 24;
+        solver->assist_plot = false;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("unstable"))
+    {
+        solver->bodies_org.push_back(Body(vec3(0.0e0f, 0.0e0f, 0.0e0f), vec3(0.0e0f, 0.0e0f, 0.0e0f), 1.98847e30f, ImVec4(1, 0.824, 0, 1)));
+        solver->bodies_org.push_back(Body(vec3(6.00e11f, 1.40e9f, 0.0e0f), vec3(5.00e3f, 8.00e3f, 0.0e0f), 1.0e3f, ImVec4(0.6, 0.6, 0.6, 1)));
+        solver->bodies_org.push_back(Body(vec3(7.785e11f, 0.0e0f, 0.0e0f), vec3(0.0e0f, 1.3078e4f, 0.0e0f), 1e30f, ImVec4(1, 0, 0, 1)));
+        solver->endTimeDays = 3650;
+        solver->tStepHours = 6;
+        solver->assist_plot = false;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("gravity assist"))
+    {
+        solver->bodies_org.push_back(Body(vec3(0.0e0f, 0.0e0f, 0.0e0f), vec3(0.0e0f, 0.0e0f, 0.0e0f), 1.98847e30f, ImVec4(1, 0.824, 0, 1)));
+        solver->bodies_org.push_back(Body(vec3(6.00e11f, 1.40e9f, 0.0e0f), vec3(8.00e3f, 12.00e3f, 0.0e0f), 1.0e3f, ImVec4(0.6, 0.6, 0.6, 1)));
+        solver->bodies_org.push_back(Body(vec3(7.785e11f, 0.0e0f, 0.0e0f), vec3(0.0e0f, 1.3078e4f, 0.0e0f), 1.89813e27f, ImVec4(0, 0.7647, 0.2235, 1)));
+        solver->endTimeDays = 750;
+        solver->tStepHours = 6;
+        solver->assist_plot = true;
+    }
+    solver->recalcTconstants();
 
-                    ImPlot::PlotLine(
-                        "Specific Energy",
-                        solver->times.data(),
-                        solver->E_p.data(),
-                        solver->plotIter
-                    );
+    if (ImGui::Button("START"))
+    {
+        for (int i = 0; i < solver->bodies_org.size(); i++)
+        {
+            solver->bodies_org[i].clear();
+        }
+        solver->solveNBody();
+        // double topSize = 0;
+        // for (int i=0;i<solver->bodies[1].velocity.size();i++)
+        // {
 
-                    ImPlot::EndPlot();
+        //     if (solver->bodies[1].velocity[i].size()>topSize)
+        //     {
+
+        //         topSize=solver->bodies[1].velocity[i].size();
+        //     }
+        // }
+        // std::cout<<topSize<<"\n";
+    }
+    if (ImGui::Button("plot"))
+    {
+        solver->plotIter = 1;
+        plot = true;
+        // for (int i=0;i<solver->bodies[2].position.size();i++){
+        //     std::cout<<solver->bodies[2].position[i].arr[0]<<";"<<solver->bodies[2].position[i].arr[1]<<"\n";
+        // }
+    }
+    if (ImGui::Button("testSize"))
+    {
+        std::cout << solver->bodies[0].position.size() << std::endl;
+        std::cout << solver->bodies[1].position.size() << std::endl;
+        std::cout << solver->bodies[2].position.size() << std::endl;
+    }
+    ImGui::Text("Add bodies(can use preset)->START->...->plot");
+
+    if (solver->assist_plot)
+    {
+        ImGui::BeginChild("assistPlotWindow");
+        if (ImPlot::BeginPlot("Spacecraft Energy"))
+        {
+
+            ImPlot::SetupAxes(
+                "Time (h)",
+                "Specific Energy (J/kg)");
+            ImPlot::SetupAxesLimits(0, 20e3, -1.5e8, 0);
+
+            ImPlot::PlotLine(
+                "Specific Energy",
+                solver->times.data(),
+                solver->E_p.data(),
+                solver->plotIter);
+
+            ImPlot::EndPlot();
+        }
+        ImGui::EndChild();
+    }
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("plotWindow", ImVec2(-1, -1));
+
+    if (ImPlot3D::BeginPlot("My Plot", UIConstants->NBodyPlotSize))
+    {
+        ImPlot3D::SetupAxes("x(m)", "y(m)", "z(m)");
+        ImPlot3D::SetupAxesLimits(-1e12, 1e12, -1e12, 1e12, -1e12, 1e12);
+        if (plot == true)
+        {
+            if (solver->plotIter < solver->bodies[0].position.size() && solver->plotIter != 0)
+            {
+                for (int BodyI = 0; BodyI < solver->bodies.size(); BodyI++)
+                {
+                    std::vector<double> fullX = getColumn(solver->bodies[BodyI].position, 0, 1);
+                    std::vector<double> fullY = getColumn(solver->bodies[BodyI].position, 1, 1);
+                    std::vector<double> fullZ = getColumn(solver->bodies[BodyI].position, 2, 1);
+                    std::vector<double> xs(fullX.begin(), fullX.begin() + solver->plotIter);
+                    std::vector<double> ys(fullY.begin(), fullY.begin() + solver->plotIter);
+                    std::vector<double> zs(fullZ.begin(), fullZ.begin() + solver->plotIter);
+                    ImPlot3D::SetNextLineStyle(solver->bodies[BodyI].colour);
+                    ImPlot3D::PlotLine("NBodyPlot" + (char)BodyI, xs.data(), ys.data(), zs.data(), solver->plotIter);
+                    // Draw ball at current/tip position
+                    double tipX = xs.back();
+                    double tipY = ys.back();
+                    double tipZ = zs.back();
+
+                    // ImPlot3D::SetNextMarkerStyle(
+                    //     ImPlotMarker_Circle,
+                    //     std::log10(solver->bodies[BodyI].mass) / 3,
+                    //     solver->bodies[BodyI].colour);
+
+                    // ImPlot3D::PlotScatter(
+                    //     "Body",
+                    //     &tipX,
+                    //     &tipY,
+                    //     &tipZ,
+                    //     1);
+                    // std::cout<<"plot time"<<solver->plotIter<<std::endl;
                 }
-            ImGui::EndChild();
-        }
-        ImGui::EndChild();
-        ImGui::SameLine();
-        ImGui::BeginChild("plotWindow",ImVec2(-1,-1));
-            // ImGui::SetNextWindowPos(UIConstants->NBodyPlotPos);
-
-            if (ImPlot::BeginPlot("My Plot",UIConstants->NBodyPlotSize)) {
-                    ImPlot::SetupAxes("x(m)", "y(m)");
-                    ImPlot::SetupAxesLimits(-1e12, 1e12,-1e12, 1e12);
-                    if (plot==true){
-                        if (solver->plotIter<solver->bodies[0].position.size() && solver->plotIter!=0){
-                            for (int BodyI=0;BodyI<solver->bodies.size();BodyI++){
-                                std::vector<double> fullX=getColumn(solver->bodies[BodyI].position,0, 1);
-                                std::vector<double> fullY=getColumn(solver->bodies[BodyI].position,1, 1);
-                                std::vector<double> fullZ=getColumn(solver->bodies[BodyI].position,2, 1);
-                                std::vector<double> xs(fullX.begin(),fullX.begin()+solver->plotIter);
-                                std::vector<double> ys(fullY.begin(),fullY.begin()+solver->plotIter);
-                                ImPlot::SetNextLineStyle(solver->bodies[BodyI].colour);
-                                ImPlot::PlotLine("NBodyPlot",xs.data(),ys.data(),solver->plotIter);
-                                // Draw ball at current/tip position
-                                double tipX = xs.back();
-                                double tipY = ys.back();
-
-                                ImPlot::SetNextMarkerStyle(
-                                    ImPlotMarker_Circle,
-                                    std::log10(solver->bodies[BodyI].mass)/3,
-                                    solver->bodies[BodyI].colour
-                                );
-
-                                ImPlot::PlotScatter(
-                                    "Body",
-                                    &tipX,
-                                    &tipY,
-                                    1
-                                );
-                                // std::cout<<"plot time"<<solver->plotIter<<std::endl;
-                            }
-                            solver->plotIter+=10;
-                        }
-                    }
-                ImPlot::EndPlot();
-                
+                solver->plotIter += 10;
             }
-            ImGui::SetNextItemWidth(-1.0f);
-            ImGui::SliderInt("simTime",&solver->plotIter,0,solver->endTime/solver->tStep);
-            
-        ImGui::EndChild();
-        
+        }
+        ImPlot3D::EndPlot();
+    }
+    ImGui::SetNextItemWidth(-1.0f);
+    ImGui::SliderInt("simTime", &solver->plotIter, 0, solver->endTime / solver->tStep);
+
+    ImGui::EndChild();
+
     ImGui::End();
 }

@@ -47,7 +47,7 @@ void drawFDMTab(const ImGuiViewport *viewport, ImGuiWindowFlags flags, Constants
         ImPlot::EndPlot();
     }
     ImGui::SetNextItemWidth(-1.0f);
-    ImGui::SliderInt("Time", &fdmSolver->plotTime, 0, fdmSolver->nt);
+    ImGui::SliderInt("Time", &fdmSolver->plotTime, 0, fdmSolver->nt - 1);
     ImGui::EndChild();
     ImGui::End();
 }

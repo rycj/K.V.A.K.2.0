@@ -7,7 +7,7 @@ void FDM::solveHeatEQ(std::string IC, std::string BCType, double BCLeft, double 
 {
     double dx = X / (nx - 1);
     double dt = T / (nt - 1);
-    FDMMesh = scalarField(nx, nt + 1);
+    FDMMesh = scalarField(nx, nt);
     xs.clear();
 
     // apply IE
@@ -29,7 +29,7 @@ void FDM::solveHeatEQ(std::string IC, std::string BCType, double BCLeft, double 
     }
 
     // apply BCs
-    for (int j = 0; j <= nt; j++)
+    for (int j = 0; j < nt; j++)
     {
         if (BCType == "Dirichlet")
         {
@@ -39,7 +39,7 @@ void FDM::solveHeatEQ(std::string IC, std::string BCType, double BCLeft, double 
     };
 
     // main loop
-    for (int j = 1; j <= nt; j++)
+    for (int j = 1; j < nt; j++)
     {
         for (int i = 1; i < nx - 1; i++)
         {
@@ -111,4 +111,15 @@ void FDM::runFDM()
         break;
     }
     }
+}
+void FDM::fillIC(std::string IC)
+{
+}
+
+void FDM::fillBCs(std::string BCType, double BCLeft, double BCRight)
+{
+}
+
+void FDM::solveEQ(std::function<void()> EQFunc)
+{
 }

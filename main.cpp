@@ -1,6 +1,7 @@
 #include "iostream"
 #include <imgui.h>
 #include <implot.h>
+#include <ImPlot3D.h>
 #include "colours.h"
 #include "tabs/mainTab.h"
 #include "tabs/simpleTab.h"
@@ -141,6 +142,7 @@ int main(int, char **)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImPlot::CreateContext();
+    ImPlot3D::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     io.Fonts->AddFontDefault();
 
@@ -275,8 +277,8 @@ int main(int, char **)
             drawFDMTab(UIConstants.main_viewport, tab_flags, &UIConstants, &fdmSolver);
         }
 
-        bool show_demo = true;
-        ImGui::ShowDemoWindow(&show_demo);
+        // bool show_demo = true;
+        // ImGui::ShowDemoWindow(&show_demo);
 
         // Rendering
         ImGui::Render();
@@ -327,8 +329,9 @@ int main(int, char **)
     // Cleanup
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
+    ImPlot3D::DestroyContext();
     ImPlot::DestroyContext();
+    ImGui::DestroyContext();
 
     CleanupDeviceD3D();
     ::DestroyWindow(hwnd);

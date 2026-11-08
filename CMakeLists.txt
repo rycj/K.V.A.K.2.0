@@ -4,6 +4,7 @@ project(KVAK LANGUAGES CXX)
 
 find_package(imgui CONFIG REQUIRED)
 find_package(implot CONFIG REQUIRED)
+find_package(implot3d CONFIG REQUIRED)
 
 add_executable(KVAK
     main.cpp
@@ -35,6 +36,7 @@ target_include_directories(KVAK PRIVATE
 target_link_libraries(KVAK PRIVATE
     imgui::imgui
     implot::implot
+    implot3d::implot3d
     d3d12
     dxgi
     d3dcompiler
